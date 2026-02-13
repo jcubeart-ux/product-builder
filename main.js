@@ -89,14 +89,9 @@ class LottoGenerator extends HTMLElement {
         }
       </style>
       <div class="lotto-container">
-        <h1>Weekly Lotto</h1>
-        <div class="lotto-numbers">
-          <span class="number"></span>
-          <span class="number"></span>
-          <span class="number"></span>
-          <span class="number"></span>
-          <span class="number"></span>
-          <span class="number"></span>
+        <h1>5x5 Lotto</h1>
+        <div id="lotto-sets-container">
+          <!-- Lotto sets will be dynamically added here -->
         </div>
         <button id="generate-btn">Generate Numbers</button>
       </div>
@@ -105,33 +100,52 @@ class LottoGenerator extends HTMLElement {
 
   connectedCallback() {
     const generateBtn = this.shadowRoot.getElementById('generate-btn');
-    const numberSpans = this.shadowRoot.querySelectorAll('.lotto-numbers .number');
 
     generateBtn.addEventListener('click', () => {
-      const lottoNumbers = this.generateLottoNumbers();
-      this.displayLottoNumbers(lottoNumbers, numberSpans);
+      const lottoSets = this.generateMultipleLottoSets();
+      this.displayLottoNumbers(lottoSets);
     });
   }
 
-  generateLottoNumbers() {
+  generateMultipleLottoSets() {
+    const allLottoSets = [];
+    for (let i = 0; i < 5; i++) {
+      allLottoSets.push(this.generateLottoSet());
+    }
+    return allLottoSets;
+  }
+
+  generateLottoSet() {
     const numbers = new Set();
-    while (numbers.size < 6) {
-      const randomNumber = Math.floor(Math.random() * 45) + 1;
+    while (numbers.size < 5) {
+      const randomNumber = Math.floor(Math.random() * 25) + 1;
       numbers.add(randomNumber);
     }
     return Array.from(numbers);
   }
 
-  displayLottoNumbers(numbers, spans) {
-    numbers.sort((a, b) => a - b);
-    spans.forEach((span, index) => {
-        span.textContent = '';
-        span.classList.remove('generated');
+  displayLottoNumbers(lottoSets) {
+    const lottoSetsContainer = this.shadowRoot.getElementById('lotto-sets-container');
+    lottoSetsContainer.innerHTML = ''; // Clear previous sets
+
+    lottoSets.forEach((numbers, setIndex) => {
+      const lottoNumbersDiv = document.createElement('div');
+      lottoNumbersDiv.classList.add('lotto-numbers');
+
+      numbers.sort((a, b) => a - b); // Sort numbers within each set
+
+      numbers.forEach((number, numberIndex) => {
+        const numberSpan = document.createElement('span');
+        numberSpan.classList.add('number');
+        lottoNumbersDiv.appendChild(numberSpan);
+
         setTimeout(() => {
-            span.textContent = numbers[index];
-            span.style.animationDelay = `${index * 100}ms`;
-            span.classList.add('generated');
+          numberSpan.textContent = number;
+          numberSpan.style.animationDelay = `${(setIndex * 5 + numberIndex) * 100}ms`;
+          numberSpan.classList.add('generated');
         }, 100);
+      });
+      lottoSetsContainer.appendChild(lottoNumbersDiv);
     });
   }
 }

@@ -14,6 +14,14 @@ This project is a framework-less web application consisting of `index.html`, `st
 *   **Lotto Number Generation:** The web application now generates and displays **five sets** of five unique lottery numbers each.
 
 ## Current Plan
+**Deployment**
+
+The project has been deployed to Firebase Hosting.
+
+*   **Project ID:** Created a new Firebase project `it-product-builder-1771641224`.
+*   **Hosting Configuration:** Added `firebase.json` and `.firebaserc`.
+*   **Deployment:** Successfully deployed to `https://it-product-builder-1771641224.web.app`.
+
 **Generate and Display Multiple Lotto Sets**
 
 The project has been updated to generate and display five sets of five unique lottery numbers each.

@@ -1,10 +1,11 @@
 class LottoGenerator extends HTMLElement {
   constructor() {
     super();
+    this.selectedNumbers = new Set();
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
       <style>
-        @import url('/style.css'); /* Import global styles */
+        @import url('/style.css?v=' + new Date().getTime() + '); /* Import global styles */
 
         /* Inherit theme variables from the document root */
         .lotto-container {
@@ -16,13 +17,21 @@ class LottoGenerator extends HTMLElement {
           transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
-        h1 {
+        h1, h2 {
           color: var(--text-color); /* Use theme variable */
           font-family: 'Poppins', sans-serif;
-          font-size: 2.5rem;
-          margin-bottom: 30px;
           text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
           transition: color 0.3s ease;
+        }
+        
+        h1 {
+          font-size: 2.5rem;
+          margin-bottom: 30px;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+          margin-bottom: 20px;
         }
 
         .lotto-numbers {
@@ -87,9 +96,48 @@ class LottoGenerator extends HTMLElement {
         #generate-btn:active {
           transform: translateY(0);
         }
+
+        .number-selection-container {
+          margin-bottom: 30px;
+        }
+
+        .number-grid {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 10px;
+          max-width: 400px;
+          margin: 0 auto;
+        }
+
+        .selectable-number {
+          width: 50px;
+          height: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: var(--background-color);
+          color: var(--text-color);
+          font-size: 1.2rem;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: background-color 0.3s, color 0.3s, transform 0.2s;
+        }
+
+        .selectable-number:hover {
+          transform: scale(1.1);
+        }
+
+        .selectable-number.selected {
+          background-color: var(--button-bg);
+          color: var(--button-text);
+        }
       </style>
       <div class="lotto-container">
         <h1>5x5 Lotto</h1>
+        <div class="number-selection-container">
+          <h2>Choose your numbers</h2>
+          <div class="number-grid"></div>
+        </div>
         <div id="lotto-sets-container">
           <!-- Lotto sets will be dynamically added here -->
         </div>
@@ -100,6 +148,30 @@ class LottoGenerator extends HTMLElement {
 
   connectedCallback() {
     const generateBtn = this.shadowRoot.getElementById('generate-btn');
+    const numberGrid = this.shadowRoot.querySelector('.number-grid');
+
+    for (let i = 1; i <= 25; i++) {
+      const numberEl = document.createElement('div');
+      numberEl.classList.add('selectable-number');
+      numberEl.textContent = i;
+      numberEl.dataset.number = i;
+      numberGrid.appendChild(numberEl);
+    }
+
+    numberGrid.addEventListener('click', (e) => {
+      if (e.target.classList.contains('selectable-number')) {
+        const number = parseInt(e.target.dataset.number, 10);
+        if (this.selectedNumbers.has(number)) {
+          this.selectedNumbers.delete(number);
+          e.target.classList.remove('selected');
+        } else {
+          if (this.selectedNumbers.size < 5) {
+            this.selectedNumbers.add(number);
+            e.target.classList.add('selected');
+          }
+        }
+      }
+    });
 
     generateBtn.addEventListener('click', () => {
       const lottoSets = this.generateMultipleLottoSets();
@@ -116,10 +188,12 @@ class LottoGenerator extends HTMLElement {
   }
 
   generateLottoSet() {
-    const numbers = new Set();
+    const numbers = new Set(this.selectedNumbers);
     while (numbers.size < 5) {
       const randomNumber = Math.floor(Math.random() * 25) + 1;
-      numbers.add(randomNumber);
+      if (!this.selectedNumbers.has(randomNumber)) {
+        numbers.add(randomNumber);
+      }
     }
     return Array.from(numbers);
   }

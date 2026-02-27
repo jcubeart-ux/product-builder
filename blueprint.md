@@ -12,6 +12,7 @@ This project is a framework-less web application consisting of `index.html`, `st
 *   **Error Detection & Remediation:** The AI continuously monitors for and automatically resolves errors post-modification.
 *   **Dark Mode:** Implementation of a dark mode feature, allowing users to toggle between light and dark themes. The preference will be saved locally.
 *   **Lotto Number Generation:** The web application now generates and displays **five sets** of five unique lottery numbers each.
+*   **Contact Us:** A modern contact form integrated with Formspree, styled to match the application's aesthetic and support dark mode.
 
 ## Current Plan
 **Deployment**
@@ -19,7 +20,7 @@ This project is a framework-less web application consisting of `index.html`, `st
 The project has been deployed to Firebase Hosting.
 
 *   **Project ID:** Created a new Firebase project `it-product-builder-1771641224`.
-*   **Hosting Configuration:** Added `firebase.json` and `.firebaserc`.
+*   **Hosting Configuration:** Added `firebase.json` and `.ferbaserc`.
 *   **Deployment:** Successfully deployed to `https://it-product-builder-1771641224.web.app`.
 
 **Generate and Display Multiple Lotto Sets**
@@ -31,3 +32,12 @@ The project has been updated to generate and display five sets of five unique lo
 *   **`main.js` - `LottoGenerator` constructor (Shadow DOM HTML):** The HTML template has been updated to include a `<div id="lotto-sets-container">` which will dynamically hold the generated lottery sets.
 *   **`main.js` - `displayLottoNumbers(lottoSets)`:** Modified to accept an array of `lottoSets`. It now dynamically creates and populates the `lotto-sets-container` with five `div.lotto-numbers` elements, each containing five animated `span.number` elements for each set.
 *   **`main.js` - `connectedCallback()`:** Updated to call `generateMultipleLottoSets()` and pass the result to the modified `displayLottoNumbers()` method.
+
+**Add Contact Us Feature**
+
+A new "Contact Us" section has been added to the application.
+
+*   **`main.js` - `ContactForm` class:** A new Web Component that encapsulates the Formspree contact form.
+*   **Styling:** The form is styled with a modern, card-based layout that matches the Lotto Generator. It uses CSS variables to ensure full support for light and dark modes.
+*   **Integration:** The form is linked to Formspree (`https://formspree.io/f/mwvnygeg`) for handling message submissions.
+*   **`index.html`:** The `<contact-form>` element has been added below the lotto generator.

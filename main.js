@@ -226,6 +226,118 @@ class LottoGenerator extends HTMLElement {
 
 customElements.define('lotto-generator', LottoGenerator);
 
+class ContactForm extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>
+        @import url('/style.css?v=' + new Date().getTime());
+
+        .contact-container {
+          background: var(--lotto-card-bg);
+          padding: 40px;
+          border-radius: 20px;
+          box-shadow: 0 10px 30px var(--lotto-card-shadow);
+          text-align: center;
+          transition: background 0.3s ease, box-shadow 0.3s ease;
+          max-width: 500px;
+          width: 90%;
+          margin: 40px auto;
+        }
+
+        h2 {
+          color: var(--text-color);
+          font-family: 'Poppins', sans-serif;
+          margin-bottom: 30px;
+          font-size: 2rem;
+        }
+
+        form {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          text-align: left;
+        }
+
+        label {
+          color: var(--text-color);
+          font-weight: 700;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        input, textarea {
+          padding: 12px 15px;
+          border-radius: 10px;
+          border: 1px solid rgba(0,0,0,0.1);
+          background: var(--background-color);
+          color: var(--text-color);
+          font-family: 'Poppins', sans-serif;
+          font-size: 1rem;
+          transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        html[data-theme='dark'] input, 
+        html[data-theme='dark'] textarea {
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        input:focus, textarea:focus {
+          outline: none;
+          border-color: var(--primary-color);
+          box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        textarea {
+          min-height: 120px;
+          resize: vertical;
+        }
+
+        button {
+          background-color: var(--button-bg);
+          color: var(--button-text);
+          font-family: 'Poppins', sans-serif;
+          font-size: 1.1rem;
+          font-weight: 700;
+          padding: 15px;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: opacity 0.3s, transform 0.2s;
+          margin-top: 10px;
+        }
+
+        button:hover {
+          opacity: 0.9;
+          transform: translateY(-2px);
+        }
+
+        button:active {
+          transform: translateY(0);
+        }
+      </style>
+      <div class="contact-container">
+        <h2>Contact Us</h2>
+        <form action="https://formspree.io/f/mwvnygeg" method="POST">
+          <label>
+            Your email:
+            <input type="email" name="email" placeholder="email@example.com" required>
+          </label>
+          <label>
+            Your message:
+            <textarea name="message" placeholder="How can we help you?" required></textarea>
+          </label>
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
+    `;
+  }
+}
+
+customElements.define('contact-form', ContactForm);
+
 // Dark Mode Toggle Logic
 document.addEventListener('DOMContentLoaded', () => {
   const themeToggleBtn = document.getElementById('theme-toggle');
